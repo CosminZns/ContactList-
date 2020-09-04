@@ -7,7 +7,7 @@ public class Contact implements Comparable<Contact> {
     private String lastName;
     private String firstName;
     private String number;
-    private Group group;
+    private String group;
     private String email;
 
 
@@ -17,7 +17,7 @@ public class Contact implements Comparable<Contact> {
         this.number = number;
     }
 
-    public Contact(String lastName, String firstName, String number, Group group, String email) {
+    public Contact(String lastName, String firstName, String number, String group, String email) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.number = number;
@@ -49,11 +49,11 @@ public class Contact implements Comparable<Contact> {
         this.number = number;
     }
 
-    public Group getGroup() {
+    public String getGroup() {
         return group;
     }
 
-    public void setGroup(Group group) {
+    public void setGroup(String group) {
         this.group = group;
     }
 
@@ -72,12 +72,14 @@ public class Contact implements Comparable<Contact> {
         Contact contact = (Contact) o;
         return Objects.equals(lastName, contact.lastName) &&
                 Objects.equals(firstName, contact.firstName) &&
-                Objects.equals(number, contact.number);
+                Objects.equals(number, contact.number) &&
+                Objects.equals(group, contact.group) &&
+                Objects.equals(email, contact.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(lastName, firstName, number);
+        return Objects.hash(lastName, firstName, number, group, email);
     }
 
     @Override
