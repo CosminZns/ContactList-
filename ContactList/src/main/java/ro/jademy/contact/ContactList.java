@@ -1,7 +1,12 @@
 package ro.jademy.contact;
 
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ContactList {
 
@@ -10,7 +15,7 @@ public class ContactList {
     private Scanner sc = new Scanner(System.in);
 
 
-    public ContactList(Set<Contact> contacts, Set<String> groupSet) {
+    public ContactList( Set<Contact> contacts, Set<String> groupSet ) {
         this.contacts = contacts;
         this.groupSet = groupSet;
     }
@@ -21,8 +26,28 @@ public class ContactList {
         int decision = sc.nextInt();
         switch (decision) {
             case 1:
-                addConact();
+                showContacts();
+                break;
+            case 2:
+
+                break;
+            case 3:
+                addContact();
                 System.out.println(contacts);
+                break;
+            case 4:
+
+                break;
+            case 5:
+                showContacts();
+                System.out.println("choose the Last Name of the contact you want to change");
+                String option = sc.next();
+                System.out.println("Contact to be edited");
+                editContact(option);
+                break;
+            default:
+                System.out.println("Invalid command. Please enter your option again");
+                doMenu();
         }
     }
 
@@ -36,7 +61,7 @@ public class ContactList {
         System.out.println("5.Edit Contact");
     }
 
-    private void addConact() {
+    private void addContact() {
         System.out.println("Input first name");
         String firstName = sc.next();
         System.out.println("Input last name");
@@ -83,7 +108,31 @@ public class ContactList {
     private void search() {
         System.out.println("Please enter letter sequence");
         String pattern = sc.next();
-        contacts.stream().filter(p->p.getLastName().contains(pattern)).forEach(System.out::println);
+        contacts.stream().filter(p -> p.getLastName().contains(pattern)).forEach(System.out::println);
 
+    }
+
+    private void showContacts() {
+        System.out.println(getContactHeader());
+        int i = 0;
+        for (Contact contact: contacts) {
+            String padding = i < 9 ? " " : "";
+            System.out.println(padding + (i + 1) + ". " + contact);
+            i++;
+        }
+    }
+
+    private String getContactHeader() {
+        return StringUtils.center("  FIRST NAME", 20, " ") +
+                StringUtils.center("  LAST NAME", 16, " ") +
+                StringUtils.center(" PHONE NUMBER", 16, ' ') +
+                StringUtils.center("GROUP", 12, ' ') +
+                StringUtils.center("    EMAIL ADDRESS   ", 20, ' ');
+
+    }
+    private void editContact (String option) {
+        List<Contact> editedContact = contacts.stream().filter(contact -> contact.getLastName().contains(option))
+                .collect(Collectors.toList());
+        System.out.println(editedContact);
     }
 }

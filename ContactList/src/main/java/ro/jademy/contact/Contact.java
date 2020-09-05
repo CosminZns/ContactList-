@@ -1,5 +1,7 @@
 package ro.jademy.contact;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Objects;
 
 public class Contact implements Comparable<Contact> {
@@ -97,12 +99,10 @@ public class Contact implements Comparable<Contact> {
 
     @Override
     public String toString() {
-        return "Contact{" +
-                "lastName='" + lastName + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", number='" + number + '\'' +
-                ", group=" + group +
-                ", email='" + email + '\'' +
-                '}';
+        return  StringUtils.center(firstName, 16, " ") +
+                StringUtils.center(lastName, 16, " ") +
+                StringUtils.center(number, 16, ' ') +
+                StringUtils.center(group, 12, ' ') +
+                StringUtils.center(email, 20, ' ');
     }
 }
