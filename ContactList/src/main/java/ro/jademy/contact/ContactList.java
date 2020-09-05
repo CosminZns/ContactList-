@@ -1,7 +1,11 @@
 package ro.jademy.contact;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.UUID;
 
 public class ContactList {
 
@@ -18,11 +22,20 @@ public class ContactList {
     public void doMenu() {
         showMenu();
         System.out.println("Please enter your option");
-        int decision = sc.nextInt();
-        switch (decision) {
-            case 1:
-                addConact();
-                System.out.println(contacts);
+        try {
+            int decision = sc.nextInt();
+            switch (decision) {
+                case 3:
+                    addConact();
+                    System.out.println(contacts);
+                case 2:
+                    searchContact();
+                case 4:
+                    deleteContact();
+                    System.out.println(contacts);
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Wrong input please try again");
         }
     }
 
@@ -53,21 +66,19 @@ public class ContactList {
             String groupInput = sc.next();
             boolean check = false;
             for (String group : groupSet) {
-                if (groupInput.equalsIgnoreCase(group)) {
-                    check = true;
-                } else {
-                    check = false;
-                }
+                check = groupInput.equalsIgnoreCase(group);
             }
             if (check) {
-                Contact contact = new Contact(firstName, lastName, number, groupInput, email);
+                Contact contact = new Contact(firstName, lastName, number, groupInput, email, RandomStringUtils.randomAlphanumeric(8)
+                );
                 contacts.add(contact);
                 System.out.println("You added " + contact.getFirstName() + "to your contacts");
 
             } else {
                 System.out.println("Group " + groupInput + "created");
                 groupSet.add(groupInput);
-                Contact contact = new Contact(firstName, lastName, number, groupInput, email);
+                Contact contact = new Contact(firstName, lastName, number, groupInput, email,RandomStringUtils.randomAlphanumeric(8)
+                );
                 contacts.add(contact);
                 System.out.println("You added " + contact.getFirstName() + "to your contacts");
             }
@@ -79,11 +90,24 @@ public class ContactList {
         }
     }
 
-    //add group
-    private void search() {
-        System.out.println("Please enter letter sequence");
-        String pattern = sc.next();
-        contacts.stream().filter(p->p.getLastName().contains(pattern)).forEach(System.out::println);
 
+    private void searchContact() {
+        System.out.println("Please enter the last name or a sequence to find the contact");
+        String pattern = sc.next();
+        contacts.stream().filter(p -> p.getLastName().contains(pattern)).forEach(System.out::println);
+    }
+
+    private void deleteContact() {
+        System.out.println("What contact you want to delete?");
+        System.out.println(contacts);
+        searchContact();
+        System.out.println("Input number");
+        String id = sc.next();
+        if (contacts.removeIf(contact -> contact.getId().equals(id))) {
+            System.out.println("Removed successfully ");
+        } else {
+            System.out.println("Invalid id please try again");
+            deleteContact();
+        }
     }
 }

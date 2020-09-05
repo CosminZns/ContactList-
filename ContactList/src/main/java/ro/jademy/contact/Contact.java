@@ -9,6 +9,7 @@ public class Contact implements Comparable<Contact> {
     private String number;
     private String group;
     private String email;
+    private String id;
 
 
     public Contact(String lastName, String firstName, String number) {
@@ -17,12 +18,21 @@ public class Contact implements Comparable<Contact> {
         this.number = number;
     }
 
-    public Contact(String lastName, String firstName, String number, String group, String email) {
+    public Contact(String lastName, String firstName, String number, String group, String email, String id) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.number = number;
         this.group = group;
         this.email = email;
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getLastName() {
@@ -70,7 +80,8 @@ public class Contact implements Comparable<Contact> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Contact contact = (Contact) o;
-        return Objects.equals(lastName, contact.lastName) &&
+        return id.equals(contact.id) &&
+                Objects.equals(lastName, contact.lastName) &&
                 Objects.equals(firstName, contact.firstName) &&
                 Objects.equals(number, contact.number) &&
                 Objects.equals(group, contact.group) &&
@@ -79,7 +90,7 @@ public class Contact implements Comparable<Contact> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(lastName, firstName, number, group, email);
+        return Objects.hash(lastName, firstName, number, group, email, id);
     }
 
     @Override
@@ -101,8 +112,9 @@ public class Contact implements Comparable<Contact> {
                 "lastName='" + lastName + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", number='" + number + '\'' +
-                ", group=" + group +
+                ", group='" + group + '\'' +
                 ", email='" + email + '\'' +
+                ", id=" + id +
                 '}';
     }
 }
