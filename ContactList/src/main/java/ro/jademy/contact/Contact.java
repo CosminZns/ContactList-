@@ -11,7 +11,7 @@ public class Contact implements Comparable<Contact> {
     private String number;
     private String group;
     private String email;
-
+    private String id;
 
     public Contact(String lastName, String firstName, String number) {
         this.lastName = lastName;
@@ -19,12 +19,21 @@ public class Contact implements Comparable<Contact> {
         this.number = number;
     }
 
-    public Contact(String lastName, String firstName, String number, String group, String email) {
+    public Contact(String lastName, String firstName, String number, String group, String email, String id) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.number = number;
         this.group = group;
         this.email = email;
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId( String id ) {
+        this.id = id;
     }
 
     public String getLastName() {
@@ -68,7 +77,7 @@ public class Contact implements Comparable<Contact> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals( Object o ) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Contact contact = (Contact) o;
@@ -76,12 +85,13 @@ public class Contact implements Comparable<Contact> {
                 Objects.equals(firstName, contact.firstName) &&
                 Objects.equals(number, contact.number) &&
                 Objects.equals(group, contact.group) &&
-                Objects.equals(email, contact.email);
+                Objects.equals(email, contact.email) &&
+                Objects.equals(id, contact.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(lastName, firstName, number, group, email);
+        return Objects.hash(lastName, firstName, number, group, email, id);
     }
 
     @Override
@@ -99,7 +109,9 @@ public class Contact implements Comparable<Contact> {
 
     @Override
     public String toString() {
-        return  StringUtils.center(firstName, 16, " ") +
+        return
+                StringUtils.center(id, 12, " ") +
+                StringUtils.center(firstName, 16, " ") +
                 StringUtils.center(lastName, 16, " ") +
                 StringUtils.center(number, 16, ' ') +
                 StringUtils.center(group, 12, ' ') +
