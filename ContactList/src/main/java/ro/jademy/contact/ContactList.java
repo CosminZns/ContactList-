@@ -102,7 +102,7 @@ public class ContactList {
         }
     }
 
-    //add group
+
     private void searchContact() {
         System.out.println("Please enter letter sequence");
         String pattern = sc.next();
@@ -110,14 +110,13 @@ public class ContactList {
 
     }
     private void binarySearchContact() {
-        System.out.println("choose the ID of the contact you want to change");
+        System.out.println("choose the ID of the contact you want to search");
         String option = sc.next();
         Contact editedContact = contacts.stream().filter(contact -> contact.getId().equals(option))
                 .findAny().get();
         List<Contact> contactList = new ArrayList<>(contacts);
-        System.out.println(contactList);
+        Collections.sort(contactList);
         System.out.println(contactList.get(Collections.binarySearch(contactList,editedContact)));
-
     }
 
     private void showContacts() {
@@ -216,11 +215,7 @@ public class ContactList {
     private void addGroup( Contact editedContact, String groupInput ) {
         boolean check = false;
         for (String group : groupSet) {
-            if (groupInput.equalsIgnoreCase(group)) {
-                check = true;
-            } else {
-                check = false;
-            }
+            check = groupInput.equalsIgnoreCase(group);
         }
         if (check) {
             editedContact.setGroup(groupInput);
