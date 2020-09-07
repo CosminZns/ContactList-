@@ -2,6 +2,7 @@ package ro.jademy.contact;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 public class Contact implements Comparable<Contact> {
@@ -96,15 +97,9 @@ public class Contact implements Comparable<Contact> {
 
     @Override
     public int compareTo(Contact o) {
-        int comp = 0;
-        comp = o.lastName.compareTo(lastName);
-        if (comp == 0) {
-            comp = o.firstName.compareTo(firstName);
-            if (comp == 0) {
-                return o.number.compareTo(number);
-            }
-        }
-        return comp;
+       return Comparator.comparing(Contact::getLastName)
+               .thenComparing(Contact::getFirstName)
+               .thenComparing(Contact::getNumber).compare(this, o);
     }
 
     @Override

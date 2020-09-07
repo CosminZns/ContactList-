@@ -5,10 +5,5 @@ public class Main {
 
         ContactList contactList = new ContactList(DataSource.createContacts(), DataSource.createGroups());
         contactList.doMenu();
-
-        //problem with constructors
-        //problem with BinarySearch
-
-
     }
 }

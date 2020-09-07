@@ -24,39 +24,48 @@ public class ContactList {
     public void doMenu() {
         showMenu();
         System.out.println("Please enter your option");
-        int decision = sc.nextInt();
-        switch (decision) {
-            case 1:
-                showContacts();
-                doMenu();
-                break;
-            case 2:
-                searchContact();
-                doMenu();
-                break;
-            case 3:
-                addContact();
-                System.out.println(contacts);
-                doMenu();
-                break;
-            case 4:
-                deleteContact();
-                doMenu();
-                break;
-            case 5:
-                editContact();
-                doMenu();
-                break;
-            case 6:
-                binarySearchContact();
-                doMenu();
-                break;
-            case 7:
-                System.exit(0);
-            default:
-                System.out.println("Invalid command. Please enter your option again");
-                doMenu();
+
+        try {
+
+            int decision = sc.reset().nextInt();
+            switch (decision) {
+                case 1:
+                    showContacts();
+                    doMenu();
+                    break;
+                case 2:
+                    searchContact();
+                    doMenu();
+                    break;
+                case 3:
+                    addContact();
+                    System.out.println(contacts);
+                    doMenu();
+                    break;
+                case 4:
+                    deleteContact();
+                    doMenu();
+                    break;
+                case 5:
+                    editContact();
+                    doMenu();
+                    break;
+                case 6:
+                    binarySearchContact();
+                    doMenu();
+                    break;
+                case 7:
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid command. Please enter your option again");
+                    doMenu();
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Please enter valid option");
+            sc = new Scanner(System.in);
+            doMenu();
         }
+
     }
 
 
@@ -129,11 +138,13 @@ public class ContactList {
     private void binarySearchContact() {
         System.out.println("choose the ID of the contact you want to search");
         String option = sc.next();
-        Contact editedContact = contacts.stream().filter(contact -> contact.getId().equals(option))
-                .findAny().get();
-        List<Contact> contactList = new ArrayList<>(contacts);
-        Collections.sort(contactList);
-        System.out.println(contactList.get(Collections.binarySearch(contactList, editedContact)));
+        Optional<Contact> optEditedContact = contacts.stream().filter(contact -> contact.getId().equals(option))
+                .findAny();
+        if (optEditedContact.isPresent()) {
+            Contact editedContact = optEditedContact.get();
+            List<Contact> contactList = new ArrayList<>(contacts);
+            System.out.println(contactList.get(Collections.binarySearch(contactList, editedContact)));
+        }
     }
 
     private void showContacts() {
