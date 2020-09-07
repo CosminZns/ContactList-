@@ -4,9 +4,10 @@ package ro.jademy.contact;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
+
 
 public class ContactList {
 
@@ -15,7 +16,7 @@ public class ContactList {
     private Scanner sc = new Scanner(System.in);
 
 
-    public ContactList( Set<Contact> contacts, Set<String> groupSet ) {
+    public ContactList(Set<Contact> contacts, Set<String> groupSet) {
         this.contacts = contacts;
         this.groupSet = groupSet;
     }
@@ -30,8 +31,7 @@ public class ContactList {
                 doMenu();
                 break;
             case 2:
-                binarySearchContact();
-                //searchContact();
+                searchContact();
                 doMenu();
                 break;
             case 3:
@@ -47,6 +47,12 @@ public class ContactList {
                 editContact();
                 doMenu();
                 break;
+            case 6:
+                binarySearchContact();
+                doMenu();
+                break;
+            case 7:
+                System.exit(0);
             default:
                 System.out.println("Invalid command. Please enter your option again");
                 doMenu();
@@ -61,6 +67,8 @@ public class ContactList {
         System.out.println("3.Add Contact");
         System.out.println("4.Delete Contact");
         System.out.println("5.Edit Contact");
+        System.out.println("6.Search by Id");
+        System.out.println("7.Exit");
     }
 
     private void addContact() {
@@ -75,26 +83,34 @@ public class ContactList {
         if (decision.equalsIgnoreCase("y")) {
             System.out.println("Input email");
             String email = sc.next();
-            //validate email method -> progress
-            System.out.println("Input group");
-            String groupInput = sc.next();
-            boolean check = false;
-            for (String group : groupSet) {
-                check = groupInput.equalsIgnoreCase(group);
-            }
-            if (check) {
-                Contact contact = new Contact(firstName, lastName, number, groupInput, email, RandomStringUtils.randomAlphanumeric(8));
-                contacts.add(contact);
-                System.out.println("You added " + contact.getFirstName() + "to your contacts");
+            if (validateNumber(number)) {
+                if (validateEmail(email)) {
+                    System.out.println("Input group");
+                    String groupInput = sc.next();
+                    boolean check = false;
+                    for (String group : groupSet) {
+                        check = groupInput.equalsIgnoreCase(group);
+                    }
+                    if (check) {
+                        Contact contact = new Contact(firstName, lastName, number, groupInput, email, RandomStringUtils.randomAlphanumeric(8));
+                        contacts.add(contact);
+                        System.out.println("You added " + contact.getFirstName() + "to your contacts");
 
+                    } else {
+                        System.out.println("Group " + groupInput + "created");
+                        groupSet.add(groupInput);
+                        Contact contact = new Contact(firstName, lastName, number, groupInput, email, RandomStringUtils.randomAlphanumeric(8));
+                        contacts.add(contact);
+                        System.out.println("You added " + contact.getFirstName() + "to your contacts");
+                    }
+                } else {
+                    System.out.println("Please enter a valid email");
+                    addContact();
+                }
             } else {
-                System.out.println("Group " + groupInput + "created");
-                groupSet.add(groupInput);
-                Contact contact = new Contact(firstName, lastName, number, groupInput, email, RandomStringUtils.randomAlphanumeric(8));
-                contacts.add(contact);
-                System.out.println("You added " + contact.getFirstName() + "to your contacts");
+                System.out.println("Please enter a valid number");
+                addContact();
             }
-
         } else {
             Contact contact = new Contact(firstName, lastName, number);
             contacts.add(contact);
@@ -109,6 +125,7 @@ public class ContactList {
         contacts.stream().filter(p -> p.getLastName().contains(pattern)).forEach(System.out::println);
 
     }
+
     private void binarySearchContact() {
         System.out.println("choose the ID of the contact you want to search");
         String option = sc.next();
@@ -116,7 +133,7 @@ public class ContactList {
                 .findAny().get();
         List<Contact> contactList = new ArrayList<>(contacts);
         Collections.sort(contactList);
-        System.out.println(contactList.get(Collections.binarySearch(contactList,editedContact)));
+        System.out.println(contactList.get(Collections.binarySearch(contactList, editedContact)));
     }
 
     private void showContacts() {
@@ -150,7 +167,7 @@ public class ContactList {
         changeContact(editedContact);
     }
 
-    private void changeContact( Contact editedContact ) {
+    private void changeContact(Contact editedContact) {
         System.out.println("Please enter the field you want to change");
         System.out.println("1.First Name");
         System.out.println("2.Last Name");
@@ -159,7 +176,8 @@ public class ContactList {
         System.out.println("5.Email address");
         System.out.println("6.Change all information");
         int option = sc.nextInt();
-        String edited = null;
+        String edited;
+        boolean check = false;
         switch (option) {
             case 1:
                 System.out.println("Enter new First Name");
@@ -176,8 +194,18 @@ public class ContactList {
             case 3:
                 System.out.println("Enter new phone number");
                 edited = sc.next();
-                editedContact.setNumber(edited);
-                System.out.println("Contact phone number changed to: " + edited);
+                check = false;
+                while (!check) {
+                    if (validateNumber(edited)) {
+                        editedContact.setNumber(edited);
+                        System.out.println("Contact phone number changed to: " + edited);
+                        check = true;
+
+                    } else {
+                        System.out.println("Please enter a valid number");
+
+                    }
+                }
                 break;
             case 4:
                 System.out.println("Enter new group");
@@ -188,8 +216,15 @@ public class ContactList {
             case 5:
                 System.out.println("Enter new email");
                 edited = sc.next();
-                editedContact.setEmail(edited);
-                System.out.println("Contact email changed to: " + edited);
+                while (!check) {
+                    if (validateEmail(edited)) {
+                        editedContact.setEmail(edited);
+                        System.out.println("Contact email changed to: " + edited);
+                        check = true;
+                    } else {
+                        System.out.println("Please enter a valid email");
+                    }
+                }
                 break;
             default:
                 System.out.println("Enter new First Name");
@@ -212,7 +247,7 @@ public class ContactList {
         }
     }
 
-    private void addGroup( Contact editedContact, String groupInput ) {
+    private void addGroup(Contact editedContact, String groupInput) {
         boolean check = false;
         for (String group : groupSet) {
             check = groupInput.equalsIgnoreCase(group);
@@ -238,5 +273,28 @@ public class ContactList {
             System.out.println("Invalid id please try again");
             deleteContact();
         }
+    }
+
+    private boolean validateEmail(String email) {
+        boolean result = true;
+        try {
+            InternetAddress emailAddr = new InternetAddress(email);
+            emailAddr.validate();
+        } catch (AddressException ex) {
+            result = false;
+        }
+        return result;
+    }
+
+    private boolean validateNumber(String number) {
+        if (number == null) {
+            return false;
+        }
+        try {
+            int d = Integer.parseInt(number);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
     }
 }
