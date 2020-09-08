@@ -5,5 +5,7 @@ public class Main {
 
         ContactList contactList = new ContactList(DataSource.createContacts(), DataSource.createGroups());
         contactList.doMenu();
+        //exceptions to add
+        //change to phone Object
     }
 }
