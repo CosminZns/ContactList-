@@ -1,9 +1,10 @@
 package ro.jademy.contact;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public class PhoneNumber {
+public class PhoneNumber implements Serializable {
     private List<String> numbers;
     private String suffix;
 
@@ -40,5 +41,13 @@ public class PhoneNumber {
     @Override
     public int hashCode() {
         return Objects.hash(numbers, suffix);
+    }
+
+    @Override
+    public String toString() {
+        return "PhoneNumber{" +
+                "numbers=" + numbers +
+                ", suffix='" + suffix + '\'' +
+                '}';
     }
 }

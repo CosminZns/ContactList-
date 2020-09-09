@@ -7,33 +7,35 @@ import java.util.Objects;
 
 public class Contact implements Comparable<Contact> {
 
+
+    private String id;
     private String lastName;
     private String firstName;
-    private String number;
+    private PhoneNumber number;
     private String group;
     private String email;
-    private String id;
 
-    public Contact(String lastName, String firstName, String number) {
+
+    public Contact(String lastName, String firstName, PhoneNumber number) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.number = number;
     }
 
-    public Contact(String lastName, String firstName, String number, String group, String email, String id) {
+    public Contact(String id, String lastName, String firstName, PhoneNumber number, String group, String email) {
+        this.id = id;
         this.lastName = lastName;
         this.firstName = firstName;
         this.number = number;
         this.group = group;
         this.email = email;
-        this.id = id;
     }
 
     public String getId() {
         return id;
     }
 
-    public void setId( String id ) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -53,11 +55,11 @@ public class Contact implements Comparable<Contact> {
         this.firstName = firstName;
     }
 
-    public String getNumber() {
+    public PhoneNumber getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(PhoneNumber number) {
         this.number = number;
     }
 
@@ -78,7 +80,7 @@ public class Contact implements Comparable<Contact> {
     }
 
     @Override
-    public boolean equals( Object o ) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Contact contact = (Contact) o;
@@ -97,19 +99,19 @@ public class Contact implements Comparable<Contact> {
 
     @Override
     public int compareTo(Contact o) {
-       return Comparator.comparing(Contact::getLastName)
-               .thenComparing(Contact::getFirstName)
-               .thenComparing(Contact::getNumber).compare(this, o);
+        return Comparator.comparing(Contact::getLastName)
+                .thenComparing(Contact::getFirstName).compare(this, o);
+
     }
 
     @Override
     public String toString() {
         return
                 StringUtils.center(id, 12, " ") +
-                StringUtils.center(firstName, 16, " ") +
-                StringUtils.center(lastName, 16, " ") +
-                StringUtils.center(number, 16, ' ') +
-                StringUtils.center(group, 12, ' ') +
-                StringUtils.center(email, 20, ' ');
+                        StringUtils.center(firstName, 16, " ") +
+                        StringUtils.center(lastName, 16, " ") +
+                        StringUtils.center(number.getNumbers().toString(), 16, ' ') +
+                        StringUtils.center(group, 12, ' ') +
+                        StringUtils.center(email, 20, ' ');
     }
 }
