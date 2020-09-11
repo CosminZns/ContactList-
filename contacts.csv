@@ -1,2 +1,4 @@
-FIRST_NAME,LAST_NAME,NUMBERS,SUFIX,GROUP,EMAIL
-Gigi,Gigescu,741012345'741012345,+40,FAMILY,gigi@gmail.com
+Andreeescu,Mihai,[[725165726]],+40,Friends,mihai@gmail.com
+Cosminescu,Mihai,[[[725165726]]],+40,Friends,mihai@gmail.com
+Mihaiescu,Mihai,[[[[[725165726]]]], [725167456]],+40,Friends
+Zarnescu,Mihai,[[[[725165726]]]],+40,Friends,mihai@gmail.com

@@ -2,18 +2,13 @@ package ro.jademy.contact;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class DataSource {
+    private static Scanner sc = new Scanner(System.in);
     private static final String FILE_NAME = "contacts.csv";
-
-
     //public static Set<Contact> createContacts() {
-
 
     //        Contact contact = new Contact("Andreescu", "Andrei", "0723123456", "Family", "andrei@gmail.com", RandomStringUtils.randomAlphanumeric(8));
 //        Contact contact1 = new Contact("Alexandrescu", "Mihai", "0723135456", "Work", "mihai@gmail.com", RandomStringUtils.randomAlphanumeric(8));
@@ -40,12 +35,10 @@ public class DataSource {
 //        groupSet.add("Friends");
 //        return groupSet;
 //    }
-    public static Set<Contact> createContacts() {
+    public static Set<Contact> readContacts() {
         List<Contact> contacts = new ArrayList<>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME));
-            String header = reader.readLine();
-            System.out.println(header);
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] strings = line.split(",");
@@ -67,4 +60,88 @@ public class DataSource {
         return new TreeSet<>(contacts);
     }
 
+
+    public static void saveContacts(Set<Contact> contacts, String fileName) {
+        try {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName));
+            contacts.forEach(contact -> {
+                try {
+                    bufferedWriter.write(contact.getLastName() + "," + contact.getFirstName() + "," + contact.getNumber().getNumbers() + "," +
+                            contact.getNumber().getSuffix() + "," + contact.getGroup() + "," + contact.getEmail() + "\n");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            bufferedWriter.flush();
+        } catch (IOException e) {
+            System.out.println("Failed to write line in file");
+            e.printStackTrace();
+        }
+    }
+
+    public static void showOptions() {
+        System.out.println("1.Create a Back Up File");
+        System.out.println("2.Load Back Up File");
+        System.out.println("3.View Back Up File details");
+    }
+
+    //Scoatere parametrii cand ii mut in ContactList (Set<Contact> am deja acces ), String name/pathName voi face o variabila globala
+    public static void backUpMenu() {
+        showOptions();
+        int decison = sc.nextInt();
+        switch (decison) {
+            case 1:
+                //createBackUp();
+                break;
+            case 2:
+                //Pentru a citi backUp file apelam readContacts cu alt parametru de file Name
+                //System.out.println(readContacts());
+                break;
+            case 3:
+                // getBackUpFileDetails();
+                break;
+        }
+    }
+
+    public static void getBackUpFileDetails(String name) {
+        File file = new File(name);
+        if (file.exists()) {
+            System.out.println("The path of your back up file is " + file.getAbsolutePath());
+            System.out.println("The name of your file is  " + file.getName());
+            System.out.println("Last time the file was modifed was: " + file.lastModified());
+        } else {
+            System.out.println("You don't have a back up file created");
+        }
+
+    }
+
+    public static void createBackUp(String namePath, Set<Contact> contacts) {
+        System.out.println("Do you want to enter a custom path ?");
+        String decision = sc.next();
+        if (decision.equalsIgnoreCase("y")) {
+            System.out.println("Please enter a path");
+            decision = sc.next();
+            //aici verificare de path pentru variabila decison -> probabil un try/catch
+            createFile(decision, contacts);
+        } else {
+            createFile(namePath, contacts);
+        }
+    }
+
+    public static void createFile(String namePath, Set<Contact> contacts) {
+        File file = new File(namePath);
+        try {
+            if (file.createNewFile()) {
+                saveContacts(contacts, namePath);
+                System.out.println("You created a backUp file");
+            } else {
+                System.out.println("You already have a backUp file");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
+
+
