@@ -13,6 +13,7 @@
 //
 //    private Set<Contact> contacts;
 //    private Set<String> groupSet;
+
 //    private Scanner sc = new Scanner(System.in);
 //
 //
@@ -203,6 +204,7 @@
 //                System.out.println("Contact last name changed to: " + edited);
 //                break;
 //            case 3:
+
 //                System.out.println("Enter new phone number");
 //                edited = sc.next();
 //                check = false;
